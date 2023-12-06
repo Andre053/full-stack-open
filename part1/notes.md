@@ -108,3 +108,32 @@
     - If my code does not work, I will not write more code. I will fix the code or return to a state when everything was still working
     - I will formulate my questions to others properly
 
+# Exercise Notes
+
+## 1.1 course info step1
+- Refactor given code to have 3 separate components
+- Each component will need to accept props
+## 1.2 course info step2
+- Refactor *Content* component to not render any names or their number of exercises by itself
+- Move this logic into *Part* components
+## 1.3 course info step3
+- Use objects in the app to contain *part* data
+- Refactor the code to work with the objects
+## 1.4 course info step4
+- Place those same objects into a parts array
+- Refactor the code to work with the array of objects
+## 1.5 course info step5
+- Change all the intiial info to be in a single course object
+- Refactor so everything works
+
+## 1.6 unicafe step1
+- 3 buttons: good, neutral, and bad
+- Keep count of each feedback type
+- Display count under 'statistics' section
+
+
+
+# Takeaways from Coding
+- Missing param will be null in component call, no error
+- Dividing by zero returns NaN, calculating average with total
+- DOM nesting when certain tags are nested, always a HTML mistake
