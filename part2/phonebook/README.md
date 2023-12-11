@@ -9,6 +9,8 @@
 - Adding entries to state
 - Filtering state responsively
 - Input checks for empty entries
+- Initial state moved to JSON server
+- Fetch data with useEffect and axios
 
 
 ## Challenges
@@ -20,3 +22,6 @@
     - BAD SOLUTION: Abstract the update filter function so it can be called manually, or with the event handler. Call it manually when a new entry is added
         -> Since the persons array being used by the function is not the up to date one, nothing changes
     - WORKAROUND: Set the filter to the full phonebook, clear the filter
+- Setting initial state with Effect hook now automatically updating the data on the page
+    - The persons data is set and will work next update, but not updated automatically
+        - ANSWER: Component updates on filtered persons, not original persons, must set both in the useEffect
