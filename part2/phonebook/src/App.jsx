@@ -3,13 +3,13 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Numbers from './components/Numbers'
 import axios from 'axios'
+import personService from './services/persons'
 
 const App = () => {
 
   const [persons, setPersons] = useState([])
 
   const hook = () => {
-    console.log("Effect triggered")
     
     axios
       .get('http://localhost:3001/persons')
@@ -19,6 +19,7 @@ const App = () => {
         setPersons(updatedPersons)
         setNewFiltered(updatedPersons)
       })
+      .catch(err => console.log("Error accessing database:", err))
   
   }
   useEffect(hook, [])
@@ -35,21 +36,46 @@ const App = () => {
       alert("Please add both a name and number to the entry")
       return 
     }
-    if (persons.filter(p => p.name === newName || p.number === newNumber).length > 0) {
-      alert(`${newName} is already in the phonebook`)
+    const found = persons.filter(p => p.name === newName) 
+    if (found.length > 0) {
+      const result = confirm(`${newName} is already in the phonebook, would you like to replace the old number?`)
+      if (!result) return
+
+      const person = found[0]
+      const updatedNumber = { ...person, number: newNumber }
+      personService
+        .updatePerson(person.id, updatedNumber)
+        .then(result => console.log("Successful update:", result))
+        .catch(err => console.log("Error updating:", err)) 
+      
+      const updatedPersons = [ ...persons ]
+      const index = updatedPersons.findIndex(i => i.id === person.id)
+      updatedPersons[index] = updatedNumber
+
+      setPersons(updatedPersons)
+      setNewName('')
+      setNewNumber('')
+      setNewSearch('') // ideally will keep the value 
+      setNewFiltered(updatedPersons)
+
       return 
     }
 
     const personSubmitted = { name: newName, number: newNumber }
-    const updatedPersons = persons.concat([personSubmitted])
-    setPersons(updatedPersons)
-
-    // resetting page state with new data
-    setNewName('')
-    setNewNumber('')
-    setNewFiltered(updatedPersons)
-    setNewSearch('')
-
+    console.log("Submitted", personSubmitted)
+    personService
+      .create(personSubmitted)
+      .then(returnedPerson => {
+        const updatedPersons = persons.concat(returnedPerson)
+        setPersons(updatedPersons)
+        setNewName('')
+        setNewNumber('')
+        setNewSearch('') // ideally will keep the value 
+        setNewFiltered(updatedPersons)
+      })
+      .catch(err =>
+        console.log("Error posting person", err)
+      )
   }
 
   const handleNameChange = (e) => {
@@ -71,12 +97,28 @@ const App = () => {
     setNewFiltered(updatedFilter)
   }
 
+  const handleDelete = (id) => {
+    const result = confirm("Delete", persons.filter(p => p.id == id)[0].name)
+    if (!result) return
+
+    personService 
+      .deletePerson(id)
+      .then(() => {
+        console.log("Deleted", id)
+        const updatedPersons = persons.filter(p => p.id != id)
+        setPersons(updatedPersons)
+        setNewSearch('') // ideally will keep the value 
+        setNewFiltered(updatedPersons)
+      })
+      .catch(err => console.log("Failed to delete:", err))
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
       <Filter searchVal={newSearch} handleSearch={handleNewSearch}/>
       <PersonForm name={newName} number={newNumber} handleSubmit={handleSubmit} handleNameChange={handleNameChange} handleNewNumber={handleNewNumber}/>
-      <Numbers persons={newFiltered}/>
+      <Numbers persons={newFiltered} handleDelete={handleDelete}/>
     </div>
   )
 }
