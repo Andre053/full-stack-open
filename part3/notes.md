@@ -1,0 +1,37 @@
+# a - Node.js and Express
+- NodeJS: JavaScript runtime based on Google's Chrome V8 JavaScript engine
+- TRIVIA: Code running in the browser that is not yet supported must be *transpiled*
+    - Popular transpiler is *babel*
+    - JavaScript in the backend largely supports most new features
+- Use `npm init` to set up a Node project
+- *npm scripts* are defined in package.json under *scripts*
+    - Customary to execute npm tasks with scripts
+- Node's built-in web server module *http*
+- TRIVIA: JavaScript in the browser uses ES6 modules, JavaScript in Node.js uses CommonJS modules
+- `JSON.stringify()` to format strings for transport
+- Using built-in http package is cumbersome, especially on large projects
+    - Use a framework made to ease backend development instead
+- See Node dependencies in the *node_modules* directory in the root of the project
+    - Contains the source code
+- TRIVIA: npm uses *semantic versioning*
+    - Ex. ^4.18.2
+        - Caret in front of the version number means that if and when the dependencies of a project are updated, the version of express that is installed will be at least the version number
+        - The first number is the *major* number, if this number is the same, it is backwards compatible
+        - Second number is the *minor* number
+        - Third number is the *patch* number
+    - Update dependencies with `npm update`
+- Express
+    - Most popular backend framework for Node.js
+    - Event based
+    - Handlers accept a request and response
+- nodemon
+    - Watches for file changes in the project and restarts node when detected
+    - Still need to refresh the browser as there is no *hot reload* functionality
+    - Must be called with the binary in *node_modules* if not calling from a script
+        - Set a script to automatically call nodemon for the app, no path needed 
+- REST
+    - Representational State Transfer by Roy Fielding
+    - Architectural style for building scalable web applications
+    - Only care about the practical use as it relates to modern web design
+    - *Resources* have an associated *URL* which is it's *unique address*
+    - Uniform interface: A consistent way of defining interfaces that makes it possible for systems to cooperate

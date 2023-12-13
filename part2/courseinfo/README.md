@@ -1,3 +1,2 @@
-# Courseinfo
-- Displays static data to the screen
-- Uses JavaScript objects for data organization
+# Courseinfo Extension
+- Utilizes module components, mapping elements, and the reduce function

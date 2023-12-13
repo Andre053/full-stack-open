@@ -1,6 +1,9 @@
 # ABOUT
 This document consists of notes I took while completing Full Stack open. These notes are not based off of the course material but were further research I conducted while going through the course.
 
+## Challenges when solving problems
+- Handling multiple state variables between multiple components
+
 ## JavaScript
 - Features
     - Dynamic
@@ -22,9 +25,14 @@ This document consists of notes I took while completing Full Stack open. These n
     - Since they do not have their own `this`, they will not use the global object
     - Pros
     - Cons
-
+## React
+- Components
+- Hooks
+    - useState
+    - useEffect
 ## Node.js
 - JavaScript runtime for the server-side
+
 ## TypeScript
 
 ## DOM
