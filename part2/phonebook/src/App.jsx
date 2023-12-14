@@ -1,16 +1,23 @@
 import { useEffect, useState } from 'react'
+import "./styles.css"
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Numbers from './components/Numbers'
+import Notification from './components/Notification'
 import axios from 'axios'
 import personService from './services/persons'
 
 const App = () => {
 
   const [persons, setPersons] = useState([])
+  const [message, setMessage] = useState(null)
+  const [newName, setNewName] = useState('')
+  const [newNumber, setNewNumber] = useState('')
+  const [newSearch, setNewSearch] = useState('')
+  const [newFiltered, setNewFiltered] = useState(persons)
+
 
   const hook = () => {
-    
     axios
       .get('http://localhost:3001/persons')
       .then(res => {
@@ -19,15 +26,11 @@ const App = () => {
         setPersons(updatedPersons)
         setNewFiltered(updatedPersons)
       })
-      .catch(err => console.log("Error accessing database:", err))
-  
+      .catch(
+        err => console.log("Error accessing database:", err)
+      )
   }
   useEffect(hook, [])
-
-  const [newName, setNewName] = useState('')
-  const [newNumber, setNewNumber] = useState('')
-  const [newSearch, setNewSearch] = useState('')
-  const [newFiltered, setNewFiltered] = useState(persons)
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -45,8 +48,16 @@ const App = () => {
       const updatedNumber = { ...person, number: newNumber }
       personService
         .updatePerson(person.id, updatedNumber)
-        .then(result => console.log("Successful update:", result))
-        .catch(err => console.log("Error updating:", err)) 
+        .then(
+          result => {
+            console.log("Successful update:", result) 
+            messageTimeout(`Updated ${newName}`)
+          }
+        )
+        .catch(err => {
+            console.log("Error updating:", err)
+            messageTimeout(`Information of ${newName} has already been removed from server`)
+          }) 
       
       const updatedPersons = [ ...persons ]
       const index = updatedPersons.findIndex(i => i.id === person.id)
@@ -72,6 +83,7 @@ const App = () => {
         setNewNumber('')
         setNewSearch('') // ideally will keep the value 
         setNewFiltered(updatedPersons)
+        messageTimeout(`Added ${newName}`)
       })
       .catch(err =>
         console.log("Error posting person", err)
@@ -113,9 +125,18 @@ const App = () => {
       .catch(err => console.log("Failed to delete:", err))
   }
 
+  const messageTimeout = (m) => {
+    setMessage(m)
+
+    setTimeout(() => {
+      setMessage(null)
+    }, 5000)
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message}/>
       <Filter searchVal={newSearch} handleSearch={handleNewSearch}/>
       <PersonForm name={newName} number={newNumber} handleSubmit={handleSubmit} handleNameChange={handleNameChange} handleNewNumber={handleNewNumber}/>
       <Numbers persons={newFiltered} handleDelete={handleDelete}/>
